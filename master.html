@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>RPG de Mesa</title>
+	<!--<link rel="stylesheet" type="text/css" href="perfil.css"/>-->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+<body>
+  <form>
+    <fieldset>
+      <legend>JOGADORES</legend>
+      <p><button type="button" onclick="getPlayers()">PEGAR JOGADORES</button><spam id="playersDiv"></spam></p>
+      <p>CARTEIRA:
+        <spam id="wallet"></spam> peças de ouro
+        <input type="number" id="walletChanger"/>
+        <button type="button" class="col-3" onclick="increaseWallet()">SOMAR</button>
+        <button type="button" class="col-3" onclick="decreaseWallet()">SUBTRAIR</button>
+      </p>
+      <p>MORAL DA COMPANHIA:
+        <!--<spam id="tableMoral"></spam>-->
+        <input type="number" id="tableMoral"/>
+        <button type="button" class="col-3" onclick="getTableMoral()">PEGAR MORAL</button>
+        <button type="button" class="col-3" onclick="updateTableMoral()">UPDATE MORAL</button>
+      </p>
+    </fieldset>
+  </form>
+  <form>
+    <fieldset>
+      <legend>BATALHA</legend>
+      <p>
+        <button type="button" class="col-3" onclick="beginBattle()">COMEÇAR BATALHA</button>
+        <button type="button" class="col-3" onclick="changeTurn()">TROCAR TURNO</button>
+        <button type="button" class="col-3" onclick="endBattle()">TERMINAR BATALHA</button>
+      </p>
+      <p>
+        CAUSAR DANO:
+        Dado: <input type="number" id="monsterDice"/>
+        Dano Base: <input type="number" id="monsterDamageBase"/>
+        <button type="button" class="col-3" onclick="causeDamage()">FERIR</button>
+      </p>
+      <p>
+        CURAR VIDA:
+        <input type="number" id="cureLife"/>
+        <button type="button" class="col-3" onclick="cure()">CURAR</button>
+      </p>
+    </fieldset>
+  </form>
+  <form>
+    <fieldset>
+      <legend>FUNÇÕES INDIVIDUAIS</legend>
+      <p>USUÁRIO SELECIONADO: <spam id="selectedPlayer"></spam></p>
+      <p>Status:
+        <button type="button" class="col-3" onclick="switchBattleStatus('normal')">NORMAL</button>
+        <button type="button" class="col-3" onclick="switchBattleStatus('envenenado')">ENVENENADO</button>
+        <button type="button" class="col-3" onclick="switchBattleStatus('dormindo')">DORMINDO</button>
+        <button type="button" class="col-3" onclick="switchBattleStatus('atordoado')">ATORDOADO</button>
+      </p>
+      <p>
+        Alterar Bônus:
+        <select id="battleBonusSelect">
+          <option value="" disabled selected hidden>MULTIPLICADOR</option>
+          <option value="vigorBonus">vigor</option>
+          <option value="agilityBonus">agilidade</option>
+          <option value="inteligenceBonus">inteligência</option>
+          <option value="bargemanBonus">barganheiro</option>
+          <option value="charismaticBonus">carismático</option>
+          <option value="trustworthyBonus">confiável</option>
+          <option value="diplomatBonus">diplomata</option>
+          <option value="strategistBonus">estrategista</option>
+          <option value="scholarBonus">estudioso</option>
+          <option value="impassiveBonus">impassível</option>
+          <option value="preciseBonus">preciso</option>
+          <option value="sagaciousBonus">sagaz</option>
+          <option value="sneakyBonus">sorrateiro</option>
+          <option value="valiantBonus">valente</option>
+          <option value="swiftBonus">veloz</option>
+          <option value="toxineResistanceBonus">res.toxinas</option>
+          <option value="heatResistanceBonus">rescalor</option>
+          <option value="eletricResistanceBonus">res.eletricidade</option>
+          <option value="coldResistanceBonus">res.frio</option>
+        </select>
+        Novo valor: <input type="number" id="battleBonusInput" placeholder="0"/>
+        <button type="button" class="col-3" onclick="alterBonus()">ALTERAR</button>
+      </p>
+      <p>
+        Alterar Penalidade:
+        <select id="battlePenaltySelect">
+          <option value="" disabled selected hidden>MULTIPLICADOR</option>
+          <option value="vigorPenalty">vigor</option>
+          <option value="agilityPenalty">agilidade</option>
+          <option value="inteligencePenalty">inteligência</option>
+          <option value="bargemanPenalty">barganheiro</option>
+          <option value="charismaticPenalty">carismático</option>
+          <option value="trustworthyPenalty">confiável</option>
+          <option value="diplomatPenalty">diplomata</option>
+          <option value="strategistPenalty">estrategista</option>
+          <option value="scholarPenalty">estudioso</option>
+          <option value="impassivePenalty">impassível</option>
+          <option value="precisePenalty">preciso</option>
+          <option value="sagaciousPenalty">sagaz</option>
+          <option value="sneakyPenalty">sorrateiro</option>
+          <option value="valiantPenalty">valente</option>
+          <option value="swiftPenalty">veloz</option>
+          <option value="toxineResistancePenalty">res.toxinas</option>
+          <option value="heatResistancePenalty">res.calor</option>
+          <option value="eletricResistancePenalty">res.eletricidade</option>
+          <option value="coldResistancePenalty">res.frio</option>
+        </select>
+        Novo valor: <input type="number" id="battlePenaltyInput" placeholder="0"/>
+        <button type="button" class="col-3" onclick="alterPenalty()">ALTERAR</button>
+      </p>
+      <p>
+        Alterar Multiplicador:
+        <select id="multiplierSelect">
+          <option value="" disabled selected hidden>MULTIPLICADOR</option>
+          <option value="vigorMultiply">vigor</option>
+          <option value="agilityMultiply">agilidade</option>
+          <option value="inteligenceMultiply">inteligência</option>
+          <option value="bargemanMultiply">barganheiro</option>
+          <option value="charismaticMultiply">carismático</option>
+          <option value="trustworthyMultiply">confiável</option>
+          <option value="diplomatMultiply">diplomata</option>
+          <option value="strategistMultiply">estrategista</option>
+          <option value="scholarMultiply">estudioso</option>
+          <option value="impassiveMultiply">impassível</option>
+          <option value="preciseMultiply">preciso</option>
+          <option value="sagaciousMultiply">sagaz</option>
+          <option value="sneakyMultiply">sorrateiro</option>
+          <option value="valiantMultiply">valente</option>
+          <option value="swiftMultiply">veloz</option>
+          <option value="toxineResistanceMultiply">res.toxina</option>
+          <option value="heatResistanceMultiply">res.calor</option>
+          <option value="eletricResistanceMultiply">res.eletricidade</option>
+          <option value="coldResistanceMultiply">res.frio</option>
+          <option value="lifePointsMultiply">pontos de vida</option>
+          <option value="manaPointsMultiply">pontos de mana</option>
+          <option value="strengthMultiply">força</option>
+          <option value="focusMultiply">foco</option>
+          <option value="velocityMultiply">velocidade</option>
+          <option value="damageMultiply">dano</option>
+          <option value="defenseMultiply">defesa</option>
+        </select>
+        Novo valor: <input type="number" id="multiplierInput" placeholder="1"/>
+        <button type="button" class="col-3" onclick="alterMultiplier()">ALTERAR</button>
+      </p>
+      <hr>
+      <p>Novo Item:
+        <input type="text" id="itemNameInput" placeholder="NOME DO ITEM"/>
+        Quantidade: <input type="number" id="itemQuantityInput"/>
+        Peso: <input type="number" id="itemWeightInput"/>
+        Tipo: <select id="itemTypeInput">
+			          <option value="" disabled selected hidden>TIPO</option>
+			          <option value="consumable">Consumable</option>
+			          <option value="armour">Bounty</option>
+              </select>
+        Effect: <input type="text" id="itemEffectInput"/>
+        <button type="button" class="col-3" onclick="giveItem()">ADICIONAR ITEM</button>
+      </p>
+      <p>Nova Armadura/Arma:
+        <input type="text" id="armourNameInput" placeholder="NOME DA ARMADURA"/>
+        Dado: <input type="text" id="armourDiceInput" placeholder="D4, D6, D8, etc..."/>
+        Quantidade: <input type="number" id="armourQuantityInput"/>
+        Peso: <input type="number" id="armourWeightInput"/>
+        Tipo: <select id="armourTypeInput">
+			          <option value="" disabled selected hidden>TIPO</option>
+			          <option value="armadura">Armadura</option>
+			          <option value="arma">Arma</option>
+			          <option value="disparador">Disparador</option>
+			          <option value="munição">Munição</option>
+			          <option value="conduíte">Conduíte</option>
+              </select>
+        Dano: <input type="number" id="armourDamageInput"/>
+        Defesa: <input type="number" id="armourDefenseInput"/>
+        Custo: <input type="number" id="armourCostInput"/>
+        <button type="button" class="col-3" onclick="giveArmour()">ADICIONAR ARMADURA</button>
+      </p>
+      <p>Nova Abilidade:
+        <input type="text" id="abilityNameInput" placeholder="NOME DA ABILIDADE"/>
+        Tipo: <select id="abilityTypeInput">
+			          <option value="" disabled selected hidden>TIPO</option>
+			          <option value="teste">Teste</option>
+			          <option value="ataque">Ataque</option>
+			          <option value="status">Status</option>
+              </select>
+        Reusable: <select id="abilityReusableInput">
+			              <option value="" disabled selected hidden>TIPO</option>
+			              <option value="true">True</option>
+			              <option value="false">False</option>
+                  </select>
+        Test: <input type="text" id="abilityTestInput" placeholder="<virtude><nº>+<dado>"/>
+        Cooldown: <input type="number" id="abilityCooldownInput"/>
+        Timer: <input type="number" id="abilityTimerInput" placeholder="0"/>
+        Cost: <input type="number" id="abilityCostInput"/>
+        Effect: <input type="text" id="abilityEffectInput"/>
+        Explanation: <input type="text" id="abilityExplanationInput"/>
+        <button type="button" class="col-3" onclick="giveAbility()">ADICIONAR ABILIDADE</button>
+      </p>
+    </fieldset>
+  </form>
+  
+	<script src="https://www.gstatic.com/firebasejs/4.5.2/firebase.js"></script>
+	<script src="master.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>RPG de Mesa</title>
+	<link rel="stylesheet" type="text/css" href="perfil.css"/>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+<body>
+  <div id="damageModal" class="modal hide">
+    <div class="modal-content">
+      <p class="row">VALOR DO DADO: <input type="number" id="diceInput"/></p>
+      <p class="row"><button type="button" onclick="calculateDiceResult()">CALCULAR</button></p>
+      <p class="row">DANO: <spam id="diceResult"></spam></p>
+    </div>
+  </div>
+  <div id="abilityModal" class="modal hide">
+    <div class="modal-content">
+      <p class="row">VALOR DO DADO: <input type="number" id="abilityDiceInput"/></p>
+      <p class="row"><button type="button" onclick="calculateAbilityResult()">CALCULAR</button></p>
+      <p class="row">DANO: <spam id="abilityDiceResult"></spam></p>
+      <p class="row">DANO COM BÔNUS: <spam id="abilityDiceBonusResult"></spam></p>
+    </div>
+  </div>
+  
+	<div id="menuBar" class="row">
+	  <div class="row">
+			<button type="button" class="col-3" onclick="showTab('personalInformationTab')">
+				<i class="fas fa-user fa-2x" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="col-3" onclick="showTab('atributesTab')">
+				<i class="fas fa-heartbeat fa-2x" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="col-3" onclick="showTab('virtuesTab')">
+				<i class="fas fa-dice-d20 fa-2x" aria-hidden="true"></i>
+			</button>
+		</div>
+		<div class="row">
+			<button type="button" class="col-3" onclick="showTab('inventoryTab')">
+				<i class="fas fa-shopping-bag fa-2x" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="col-3" onclick="showTab('abilitiesTab')">
+				<i class="fas fa-magic fa-2x" aria-hidden="true"></i><br/>
+				<!--<i class="fas fa-book fa-2x" aria-hidden="true"></i>-->
+			</button>
+			<button type="button" class="col-3" onclick="showTab('armourTab')">
+				<i class="fas fa-shield-alt fa-2x" aria-hidden="true"></i>
+			</button>
+		</div>
+	</div>
+	
+	<div id="battleBar" class="hide">
+	  <p class="row"><spam id="turnNumber"></spam>º turno</p>
+	  <p class="row">Status: <spam id="statusLine"></spam></p>
+	</div>
+	
+	<form>
+	  <!--<div id="spinnerDiv" class="spinnerDiv">-->
+   <!--   <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>-->
+	  <!--</div>-->
+		<fieldset id="personalInformationTab">
+			<legend>INFORMAÇÕES PESSOAIS</legend>
+		  <p id="characterLine" class="row">
+			  NOME: <span id="character">NOME</span>
+			  <button type="button" id="characterEditBtn" onclick="editProperty('character')"><i class="fas fa-pencil-alt"></i></button>
+			</p>
+			<p id="characterEdit" class="hide row">
+        <input type="text" id="characterInput" placeholder="NOME"/>
+        <button type="button" id="characterOkBtn" onclick="characterUpdate()"><i class="fas fa-check"></i></button>
+			</p>
+			<p id="raceLine" class="row">
+			  RAÇA: <span id="race">RAÇA</span>
+			  <button type="button" id="raceEditBtn" onclick="editProperty('race')"><i class="fas fa-pencil-alt"></i></button>
+			</p>
+			<p id="raceEdit" class="hide row">
+			  <select id="raceInput">
+			    <option value="" disabled selected hidden>RAÇA</option>
+			    <option value="Humana">Humana</option>
+			    <option value="Élfica">Élfica</option>
+			    <option value="Anânica">Anânica</option>
+			    <option value="Genasi">Genasi</option>
+        </select>
+        <button type="button" id="raceOkBtn" onclick="raceUpdate()"><i class="fas fa-check"></i></button>
+			</p>
+			<p id="clasLine" class="row">
+			  CLASSE: <span id="clas">CLASSE</span>
+			  <button type="button" id="clasEditBtn" onclick="editProperty('clas')"><i class="fas fa-pencil-alt"></i></button>
+			</p>
+			<p id="clasEdit" class="hide row">
+			  <select id="clasInput">
+				  <option value="" disabled selected hidden>CLASSE</option>
+				  <option value="Paladino">Paladino</option>
+			  	<option value="Caçador">Caçador</option>
+			  	<option value="Elementalista">Elementalista</option>
+			  	<option value="Hierofante">Hierofante</option>
+			  	<option value="Bardo">Bardo</option>
+				  <option value="Arcanista">Arcanista</option>
+				  <option value="Domador de Feras">Domador de Feras</option>
+			  </select>
+			  <button type="button" id="clasOkBtn" onclick="clasUpdate()"><i class="fas fa-check"></i></button>
+      </p>
+      <p id="specialtyLine" class="row">
+			  ESPECIALIDADE: <span id="specialty">ESPECIALIDADE</span>
+			  <button type="button" id="specialtyEditBtn" onclick="editProperty('specialty')"><i class="fas fa-pencil-alt"></i></button>
+			</p>
+			<p id="specialtyEdit" class="hide row">
+		  	<select id="specialtyInput">
+		  	</select>
+		    <button type="button" id="specialtyOkBtn" onclick="specialtyUpdate()"><i class="fas fa-check"></i></button>
+      </p>
+      <p id="sizeLine" class="row">
+			  PORTE FÍSICO: <span id="size">PORTE FÍSICO</span>
+			  <button type="button" id="sizeEditBtn" onclick="editProperty('size')"><i class="fas fa-pencil-alt"></i></button>
+			</p>
+			<p id="sizeEdit" class="hide row">
+			  <select id="sizeInput">
+			  	<option value="" disabled selected hidden>PORTE FÍSICO</option>
+			  	<option value="Esguio">Esguio</option>
+			  	<option value="Médio">Médio</option>
+			  	<option value="Forte">Forte</option>
+		  	</select>
+		  	<button type="button" id="sizeOkBtn" onclick="sizeUpdate()"><i class="fas fa-check"></i></button>
+      </p>
+		</fieldset>
+		<div id="atributesTab" class="hide">
+		  <fieldset>
+			  <legend>ATRIBUTOS BÁSICOS</legend>
+			  <p>PONTOS DISPONÍVEIS: <span id="atributePoints" class="float-right"></span></p>
+			  <p>VIGOR:
+			    <button type="button" onclick="addAtributePoint('vigor')"><i class="fas fa-plus"></i></button>
+			    <span id="vigor" class="float-right between-buttons"></span>
+			    <button type="button" onclick="removeAtributePoint('vigor')"><i class="fas fa-minus"></i></button>
+			  </p>
+			  <p>AGILIDADE:
+			    <button type="button" onclick="addAtributePoint('agility')"><i class="fas fa-plus"></i></button>
+			    <span id="agility" class="float-right between-buttons"></span>
+			    <button type="button" onclick="removeAtributePoint('agility')"><i class="fas fa-minus"></i></button>
+			  </p>
+			  <p>INTELIGÊNCIA:
+			    <button type="button" onclick="addAtributePoint('inteligence')"><i class="fas fa-plus"></i></button>
+			    <span id="inteligence" class="float-right between-buttons"></span>
+			    <button type="button" onclick="removeAtributePoint('inteligence')"><i class="fas fa-minus"></i></button>
+			  </p>
+		  </fieldset>
+		  <fieldset>
+			  <legend>ATRIBUTOS AVANÇADOS</legend>
+			  <p>PONTOS DE VIDA:
+			    <span id="lifePointsBase" class="float-right"></span>
+			    <span class="float-right"> / </span>
+			    <span id="lifePoints" class="float-right"></span>
+			  </p>
+			  <p>PONTOS DE MANA:
+			    <span id="manaPointsBase" class="float-right"></span>
+			    <span class="float-right"> / </span>
+			    <span id="manaPoints" class="float-right"></span>
+			  </p>
+			  <p>DANO: <span id="damagePoints" class="float-right"></span></p>
+			  <p>FORÇA: <span id="strengthPoints" class="float-right"></span></p>
+			  <p>FOCO: <span id="focusPoints" class="float-right"></span></p>
+			  <p>VELOCIDADE: <span id="velocityPoints" class="float-right"></span></p>
+			  <p>DEFESA: <span id="defensePoints" class="float-right"></span></p>
+		  </fieldset>
+		</div>
+		<fieldset id="virtuesTab" class="hide">
+			<legend>VIRTUDES</legend>
+			<p>PONTOS:
+			  <span id="virtuePoints" class="float-right"></span>
+			</p>
+			<p>Barganheiro:
+			  <button type="button" onclick="addVirtuePoint('bargeman')"><i class="fas fa-plus"></i></button>
+			  <span id="bargeman" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('bargeman')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Carismático:
+			  <button type="button" onclick="addVirtuePoint('charismatic')"><i class="fas fa-plus"></i></button>
+			  <span id="charismatic" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('charismatic')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Confiável:
+			  <button type="button" onclick="addVirtuePoint('trustworthy')"><i class="fas fa-plus"></i></button>
+			  <span id="trustworthy" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('trustworthy')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Diplomata:
+			  <button type="button" onclick="addVirtuePoint('diplomat')"><i class="fas fa-plus"></i></button>
+			  <span id="diplomat" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('diplomat')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Estrategista:
+			  <button type="button" onclick="addVirtuePoint('strategist')"><i class="fas fa-plus"></i></button>
+			  <span id="strategist" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('strategist')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Estudioso:
+			  <button type="button" onclick="addVirtuePoint('scholar')"><i class="fas fa-plus"></i></button>
+			  <span id="scholar" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('scholar')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Impassível:
+			  <button type="button" onclick="addVirtuePoint('impassive')"><i class="fas fa-plus"></i></button>
+			  <span id="impassive" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('impassive')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Preciso:
+			  <button type="button" onclick="addVirtuePoint('precise')"><i class="fas fa-plus"></i></button>
+			  <span id="precise" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('precise')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Sagaz:
+			  <button type="button" onclick="addVirtuePoint('sagacious')"><i class="fas fa-plus"></i></button>
+			  <span id="sagacious" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('sagacious')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Sorrateiro:
+			  <button type="button" onclick="addVirtuePoint('sneaky')"><i class="fas fa-plus"></i></button>
+			  <span id="sneaky" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('sneaky')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Valente:
+			  <button type="button" onclick="addVirtuePoint('valiant')"><i class="fas fa-plus"></i></button>
+			  <span id="valiant" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('valiant')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Veloz:
+			  <button type="button" onclick="addVirtuePoint('swift')"><i class="fas fa-plus"></i></button>
+			  <span id="swift" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('swift')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Resistente a toxinas:
+			  <button type="button" onclick="addVirtuePoint('toxineResistance')"><i class="fas fa-plus"></i></button>
+			  <span id="toxineResistance" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('toxineResistance')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Resistente a calor:
+			  <button type="button" onclick="addVirtuePoint('heatResistance')"><i class="fas fa-plus"></i></button>
+			  <span id="heatResistance" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('heatResistance')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Resistente a eletricidade:
+			  <button type="button" onclick="addVirtuePoint('eletricResistance')"><i class="fas fa-plus"></i></button>
+			  <span id="eletricResistance" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('eletricResistance')"><i class="fas fa-minus"></i></button>
+			</p>
+			<p>Resistente a frio:
+			  <button type="button" onclick="addVirtuePoint('coldResistance')"><i class="fas fa-plus"></i></button>
+			  <span id="coldResistance" class="float-right between-buttons"></span>
+			  <button type="button" onclick="removeVirtuePoint('coldResistance')"><i class="fas fa-minus"></i></button>
+			</p>
+		</fieldset>
+		<fieldset id="inventoryTab" class="hide">
+			<legend>INVENTÁRIO</legend>
+			<p>CARGA SOBRANDO: <span id="bagPoints"></span><span> / </span><span id="bagPointsBase"></span></p>
+			<div id="inventoryHTML"></div>
+		</fieldset>
+		<fieldset id="abilitiesTab" class="hide">
+			<legend>HABILIDADES</legend>
+			<div id="abilitiesHTML"></div>
+		</fieldset>
+		<fieldset id="armourTab" class="hide">
+			<legend>ARMADURA</legend>
+			<div id="armourHTML"></div>
+		</fieldset>
+	</form>
+	
+	<div id="logoutBar" class="row">
+	  <button type="button" id="logoutBtn" class="col-12" onclick="logoutUser()">
+			<spam>SAIR </spam><i class="fas fa-sign-out-alt fa-2x" aria-hidden="true"></i><br/>
+		</button>
+	</div>
+	
+	<script src="https://www.gstatic.com/firebasejs/4.5.2/firebase.js"></script>
+	<script src="perfil-bonus.js" type="text/javascript"></script>
+	<script src="perfil-abilities.js" type="text/javascript"></script>
+	<script src="perfil.js" type="text/javascript"></script>
+</body>
+</html>
